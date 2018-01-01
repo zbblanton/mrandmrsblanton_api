@@ -66,10 +66,10 @@ type Resp struct {
 var db *sql.DB
 var recaptchaKey string
 
-func YourHandler(w http.ResponseWriter, r *http.Request) {
-  w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+func RootHandler(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
   w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Gorilla!\n"))
+	w.Write([]byte("Hi there :)\n"))
 }
 
 func verifyRecaptcha(s string, r string) bool{
@@ -267,7 +267,7 @@ func main() {
 
   //Routes
   router := mux.NewRouter().StrictSlash(true)
-  router.HandleFunc("/", YourHandler)
+  router.HandleFunc("/", RootHandler)
   router.HandleFunc("/add", addGuests)
   router.HandleFunc("/list/all", listGuests)
   router.HandleFunc("/list/length", listLengthGuests)
