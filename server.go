@@ -27,6 +27,7 @@ type Guest struct {
   Name string `json:"name"`
   Address string `json:"address"`
   Email string `json:"email"`
+	Attending string `json:"attending"`
 	GuestOf string `json:"guestof"`
 }
 
@@ -131,13 +132,13 @@ func addGuests(w http.ResponseWriter, r *http.Request) {
   resp := Resp{}
 
   if(verifyRecaptcha(recaptchaKey, j.Recaptcha) || verifyApiKey(j.Email, j.Key)){
-    stmt, err := db.Prepare("INSERT INTO guests (Name, Address, Email, GuestOf) VALUES (?, ?, ?, ?)")
+    stmt, err := db.Prepare("INSERT INTO guests (Name, Address, Email, Attending, GuestOf) VALUES (?, ?, ?, ?, ?)")
     if err != nil {
     	log.Fatal(err)
     }
 
     for _, g := range j.Guests {
-      _, err := stmt.Exec(g.Name, g.Address, g.Email, g.GuestOf)
+      _, err := stmt.Exec(g.Name, g.Address, g.Email, g.Attending, g.GuestOf)
       if err != nil {
       	log.Fatal(err)
       }
@@ -163,13 +164,13 @@ func listGuests(w http.ResponseWriter, r *http.Request) {
 
   if(verifyApiKey(j.Email, j.Key)){
     var g Guest
-    rows, err := db.Query("SELECT Name, Address, Email, GuestOf FROM guests")
+    rows, err := db.Query("SELECT Name, Address, Email, Attending, GuestOf FROM guests")
     if err != nil {
       log.Fatal(err)
     }
     defer rows.Close()
     for rows.Next() {
-      err := rows.Scan(&g.Name, &g.Address, &g.Email, &g.GuestOf)
+      err := rows.Scan(&g.Name, &g.Address, &g.Email, &g.Attending, &g.GuestOf)
       if err != nil {
         log.Fatal(err)
       }
